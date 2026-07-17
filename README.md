@@ -66,25 +66,3 @@ pip install -r requirements.txt
 
 Then download the ProtBERT checkpoint as shown above.
 
----
-
-## 🚀 Usage
-
-```bash
-python predictor.py --input sequence.fasta --model consensus
-```
-
-**Options:**
-
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--input` | Path to input FASTA or PDB file | `--input protein.fasta` |
-| `--model` | Model to use: `protbert`, `structural`, `physchem`, or `consensus` (default) | `--model protbert` |
-
-**Example with a PDB structure:**
-
-```bash
-python predictor.py --input structure.pdb --model structural
-```
-
-**Output:**
