@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepGEN - AI-Powered Protein Antigenicity Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background particles */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(-50px) translateX(-50px); }
+            75% { transform: translateY(-150px) translateX(100px); }
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 2.5em 1em;
+            position: relative;
+            z-index: 10;
+        }
+        
+        header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3em;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.4em 1.2em;
+            border-radius: 50px;
+            font-size: 0.85em;
+            margin-top: 0.5em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 3em 2em;
+            gap: 2.5em;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 2.5em;
+            flex: 1 1 450px;
+            max-width: 550px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.2);
+        }
+        
+        h2 {
+            color: #1e3a8a;
+            margin-bottom: 1em;
+            font-size: 1.8em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 3px;
+        }
+        
+        .about-section p {
+            line-height: 1.8;
+            margin-bottom: 1em;
+            color: #555;
+        }
+        
+        .features {
+            display: grid;
+            gap: 1em;
+            margin-top: 1.5em;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: start;
+            gap: 1em;
+            padding: 1em;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+        
+        .feature-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .feature-icon {
+            font-size: 1.5em;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .feature-text {
+            flex: 1;
+        }
+        
+        .feature-text strong {
+            display: block;
+            color: #1e3a8a;
+            margin-bottom: 0.3em;
+        }
+        
+        .feature-text span {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 0.5em;
+            font-size: 1em;
+        }
+        
+        textarea, input[type="file"] {
+            width: 100%;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            font-size: 0.95em;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+        
+        textarea:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+        
+        input[type="file"] {
+            padding: 12px;
+            cursor: pointer;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 1.5em 0;
+            position: relative;
+            color: #999;
+            font-weight: 500;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        button {
+            width: 100%;
+            margin-top: 1.5em;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .error {
+            color: #dc2626;
+            margin-top: 1em;
+            font-weight: 600;
+            padding: 12px;
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+            animation: shake 0.3s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .note {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 1em;
+            padding: 12px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            padding: 2em 1em;
+            font-size: 0.95em;
+            position: relative;
+            z-index: 10;
+            background: rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Loading animation */
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        .loading button::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            section { padding: 1.5em; }
+            main { padding: 2em 1em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-animation">
+        <div class="particle" style="width: 3px; height: 3px; left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 4px; height: 4px; left: 30%; top: 40%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 2px; height: 2px; left: 50%; top: 10%; animation-delay: 4s;"></div>
+        <div class="particle" style="width: 5px; height: 5px; left: 70%; top: 60%; animation-delay: 1s;"></div>
+        <div class="particle" style="width: 3px; height: 3px; left: 90%; top: 30%; animation-delay: 3s;"></div>
+        <div class="particle" style="width: 4px; height: 4px; left: 20%; top: 70%; animation-delay: 5s;"></div>
+        <div class="particle" style="width: 2px; height: 2px; left: 60%; top: 80%; animation-delay: 2.5s;"></div>
+        <div class="particle" style="width: 3px; height: 3px; left: 80%; top: 15%; animation-delay: 4.5s;"></div>
+    </div>
+
+    <header>
+        <h1>DeepGEN</h1>
+        <p>AI-Powered Protein Antigenicity Predictor</p>
+        <span class="subtitle">🧬 Ensemble Deep Learning Platform</span>
+    </header>
+
+    <main>
+        <section class="about-section">
+            <h2>About DeepGEN</h2>
+            <p><strong>DeepGEN</strong> leverages state-of-the-art ensemble deep learning and machine learning to predict protein antigenicity with high accuracy, combining ProtBERT embeddings with physicochemical and structural features.</p>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-text">
+                        <strong>ProtBERT Embeddings</strong>
+                        <span>Advanced transformer-based sequence analysis</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚗️</div>
+                    <div class="feature-text">
+                        <strong>Physicochemical and Structural Features</strong>
+                        <span>AAC, DPC, AAindex, and SASA properties</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔬</div>
+                    <div class="feature-text">
+                        <strong>Consensus Prediction</strong>
+                        <span>Weighted ensemble for robust results</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="note">
+                <strong>📌 Input Requirements:</strong> FASTA sequences or PDB files
+            </p>
+        </section>
+
+        <section>
+            <h2>Submit Sequence</h2>
+            <form action="submit1.php" method="POST" enctype="multipart/form-data" onsubmit="return validateInput();">
+                <label for="sequence">🧬 Enter FASTA Sequence(s):</label>
+                <textarea id="sequence" name="sequence" rows="6" placeholder=">protein1
+MVLSPADKTNVKAAWGKVGAHAGEYGAEALE..."></textarea>
+
+                <div class="divider">or</div>
+
+                <label for="file">📁 Upload FASTA/PDB File:</label>
+                <input type="file" id="file" name="file" accept=".fasta,.fa,.txt,.pdb">
+
+                <div id="error" class="error"></div>
+
+                <button type="submit">
+                    🚀 Predict Antigenicity
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        © 2025 <strong>DeepGEN</strong> | Advanced Protein Antigenicity Prediction
+    </footer>
+
+    <script>
+        function validateInput() {
+            const seq = document.getElementById("sequence").value.trim();
+            const validAAs = /^[ACDEFGHIKLMNPQRSTVWY\n>*\-]+$/i;
+            const errorBox = document.getElementById("error");
+            const form = document.querySelector('form');
+
+            // Clear previous error
+            errorBox.classList.remove('show');
+            errorBox.textContent = "";
+
+            if (!seq && !document.getElementById("file").value) {
+                errorBox.textContent = "⚠️ Please enter a sequence or upload a file.";
+                errorBox.classList.add('show');
+                return false;
+            }
+
+            if (seq && seq.replace(/\n/g, "").replace(/>/g, "").length < 20) {
+                errorBox.textContent = "⚠️ Sequence must be at least 20 amino acids long.";
+                errorBox.classList.add('show');
+                return false;
+            }
+
+            if (seq && !validAAs.test(seq)) {
+                errorBox.textContent = "⚠️ Invalid amino acid characters detected. Use only standard amino acids.";
+                errorBox.classList.add('show');
+                return false;
+            }
+
+            // Add loading state
+            form.classList.add('loading');
+            
+            return true;
+        }
+    </script>
+</body>
+</html>
