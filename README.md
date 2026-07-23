@@ -59,7 +59,7 @@ sudo apt-get install dssp
 Clone the repository and install required dependencies:
 
 ```bash
-git clone https://github.com/KshitijaPawar01/DeepGen-antigenicity-prediction-tool.git
+git clone https://github.com/KshitijaPawar01/DeepGen-antigenicity-predictor-tool.git
 cd DeepGen-antigenicity-prediction-tool
 pip install -r requirements.txt
 ```
