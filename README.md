@@ -158,4 +158,5 @@ DeepGEN achieves **94.11% accuracy** on an independent dataset comprising experi
 ## 📧 Contact
 
 Kshitija Pawar — Bioinformatics Centre, Savitribai Phule Pune University.
+
 Email - pkshitija2001@gmail.com
