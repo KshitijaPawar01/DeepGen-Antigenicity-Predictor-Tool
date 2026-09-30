@@ -5,7 +5,7 @@ datasets>=2.0
 evaluate>=0.4
 
 # Machine Learning & Optimization
-scikit-learn>=1.0
+scikit-learn>=1.7.1
 xgboost>=1.5
 optuna>=3.0
 joblib>=1.1
