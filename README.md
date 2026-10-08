@@ -10,7 +10,7 @@ It integrates **three models** — ProtBERT embeddings, structural features, and
 
 ---
 
-## 📦 Features
+## Features
 
 - Input: **FASTA** (sequence only) or **PDB** (structure) files
 - Output: `Antigenic` or `Non-antigenic`, with per-model probabilities and a consensus confidence score
@@ -20,7 +20,7 @@ It integrates **three models** — ProtBERT embeddings, structural features, and
 
 ---
 
-## 🧠 Model Weights
+## Model Weights
 
 The ProtBERT checkpoint is hosted separately on Hugging Face Hub (too large for GitHub):
 
@@ -44,7 +44,7 @@ The Gradient Boosting models (`Physico_Gradient_Boosting.joblib`, `Structural_Gr
 
 ---
 
-## ⚠️ Prerequisite: DSSP
+## Prerequisite: DSSP
 
 DSSP is required for structural feature extraction from PDB files (secondary structure assignment).
 
@@ -62,7 +62,7 @@ The tool calls the `mkdssp` binary — confirm it's on your `PATH` after install
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 Clone the repository and install required dependencies:
 
@@ -76,7 +76,7 @@ Then download the ProtBERT checkpoint as shown above under **Model Weights**.
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ```bash
 python predictor.py <input_file> <file_type>
@@ -132,7 +132,7 @@ Each result entry includes the final prediction, confidence, and each model's in
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 DeepGen-Antigenicity-Predictor-Tool/
@@ -149,13 +149,13 @@ DeepGen-Antigenicity-Predictor-Tool/
 
 ---
 
-## 📊 Performance
+## Performance
 
 DeepGEN achieves **94.11% accuracy** on an independent dataset comprising experimentally validated vaccine candidate proteins. Individual model accuracies used for consensus weighting: ProtBERT 86%, physicochemical 86%, structural 73%.
 
 
 
-## 📧 Contact
+## Contact
 
 Kshitija Pawar — Bioinformatics Centre, Savitribai Phule Pune University.
 
